@@ -1,5 +1,4 @@
 """
-credits to @mrconfused and @lMl10l
 """
 #    Copyright (C) 2020  sandeep.n(π.$)
 #    This program is free software: you can redistribute it and/or modify
@@ -14,7 +13,7 @@ credits to @mrconfused and @lMl10l
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from sqlalchemy import Column, String
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 
 class Gdrive(BASE):
@@ -25,7 +24,7 @@ class Gdrive(BASE):
         self.cat = cat
 
 
-Gdrive.__table__.create(checkfirst=True)
+Gdrive.__table__.create(bind=engine, checkfirst=True)
 
 
 def is_folder(folder_id):

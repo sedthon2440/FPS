@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import Boolean, Column, Integer, String, UnicodeText, distinct, func
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 
 class Warns(BASE):
@@ -37,7 +37,7 @@ class WarnSettings(BASE):
         return f"<{self.chat_id} has {self.warn_limit} possible warns.>"
 
 
-Warns.__table__.create(checkfirst=True)
+Warns.__table__.create(bind=engine, checkfirst=True)
 WarnSettings.__table__.create(checkfirst=True)
 
 WARN_INSERTION_LOCK = threading.RLock()

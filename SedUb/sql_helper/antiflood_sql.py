@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import Column, Integer, String
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 DEF_COUNT = 0
 DEF_LIMIT = 0
@@ -23,7 +23,7 @@ class FloodControl(BASE):
         return "<flood control for %s>" % self.chat_id
 
 
-FloodControl.__table__.create(checkfirst=True)
+FloodControl.__table__.create(bind=engine, checkfirst=True)
 
 INSERTION_LOCK = threading.RLock()
 
@@ -77,7 +77,8 @@ def get_flood_limit(chat_id):
 
 def migrate_chat(old_chat_id, new_chat_id):
     with INSERTION_LOCK:
-        if flood := SESSION.query(FloodControl).get(str(old_chat_id)):
+        flood = SESSION.query(FloodControl).get(str(old_chat_id))
+        if flood:
             ANTIFLOOD_SQL_.CHAT_FLOOD[str(new_chat_id)] = ANTIFLOOD_SQL_.CHAT_FLOOD.get(
                 str(old_chat_id), DEF_OBJ
             )
@@ -85,7 +86,6 @@ def migrate_chat(old_chat_id, new_chat_id):
             SESSION.commit()
 
         SESSION.close()
-
 
 def __load_flood_settings():
     try:

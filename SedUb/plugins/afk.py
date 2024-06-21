@@ -1,6 +1,6 @@
 import asyncio
 from datetime import datetime
-from BiLaL import languages
+
 from telethon.tl import functions, types
 from SedUb.helpers.functions.functions import translate 
 from SedUb import CMD_HELP, l313l
